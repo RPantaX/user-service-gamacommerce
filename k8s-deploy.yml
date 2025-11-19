@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservicedeployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate  # Mejor que Recreate para actualizaciones sin downtime
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      name: userservicepod
+      labels:
+        app: userservice
+    spec:
+      containers:
+        - name: userservicecontainer
+          image: rpantax/user-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          # Agregar health checks
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          # Recursos recomendados
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservicesvc
+spec:
+  type: LoadBalancer
+  selector:
+    app: userservice
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
