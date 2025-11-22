@@ -26,33 +26,15 @@ public class Contract {
     @Column(name = "contract_time_month")
     private Integer timeMonth;
 
-    @NotBlank
-    @Column(name = "contract_kind")
-    private String kind;
+    @Column(name = "contract_document")
+    private String document;
 
-    @NotBlank
-    @Column(name = "contract_position")
-    private String position;
+    @Column(name = "contract_state", nullable = false)
+    private Boolean contractState;
 
-    @NotNull
-    @Column(name = "contract_salary", precision = 15, scale = 2)
-    private BigDecimal salary;
-
-    @NotBlank
-    @Column(name = "contract_state")
-    private String state;
-
-    @NotBlank
-    @Column(name = "employee_area")
-    private String employeeArea;
-
-    @Column(name = "employee_obs", columnDefinition = "TEXT")
-    private String employeeObs;
-
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @ManyToOne
+    @JoinColumn(name = "contract_kind_id", nullable = false)
+    private ContractKind contractKind;
 
     @Column(name = "modified_by_user", nullable = false, length = 15)
     private String modifiedByUser;

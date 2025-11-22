@@ -1,5 +1,6 @@
 package com.andres.springcloud.msvc.users.dto;
 
+import com.andres.springcloud.msvc.users.entities.ContractKind;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,40 +17,16 @@ public class ContractDto {
     @NotNull
     @Positive
     private Integer timeMonth;
+    private String document;
 
     @NotBlank
-    private String kind;
+    private boolean contractState;
 
-    @NotBlank
-    private String position;
-
-    @NotNull
-    @Positive
-    private BigDecimal salary;
-
-    @NotBlank
-    private String state;
-
-    @NotBlank
-    private String employeeArea;
-
-    private String employeeObs;
-
-    // Relación como ID
-    private Long employeeId;
-
-    // Objeto anidado para respuestas
-    private EmployeeDto employee;
-
-    // Campos calculados
-    private String salaryFormatted;
+    private ContractKindDto contractKindDto;
     private boolean isActive;
 
     public boolean isActive() {
-        return "ACTIVE".equalsIgnoreCase(state) || "ACTIVO".equalsIgnoreCase(state);
+        return contractState;
     }
 
-    public String getSalaryFormatted() {
-        return salary != null ? "$" + salary.toString() : "$0.00";
-    }
 }

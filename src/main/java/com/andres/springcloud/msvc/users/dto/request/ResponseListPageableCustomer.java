@@ -1,6 +1,5 @@
 package com.andres.springcloud.msvc.users.dto.request;
 
-import com.andres.springcloud.msvc.users.dto.CustomerDto;
 import lombok.*;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseListPageableCustomer {
-    private List<CustomerDto> customerDtoList;
     private int pageNumber;
     private int pageSize;
     private int totalPages;

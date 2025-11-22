@@ -1,13 +1,16 @@
 package com.andres.springcloud.msvc.users.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerTypeDto {
+public class ContractKindDto {
     private Long id;
 
     @NotBlank
