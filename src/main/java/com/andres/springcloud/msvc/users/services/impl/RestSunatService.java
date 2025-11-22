@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RestSunatService implements IRestSunatService {
     private final ClienteSunat sunat;
-    @Value("${token.api}")
+    @Value("${token.sunat.api}")
     private String tokenApi;
     @Override
     public ResponseSunat getInfoSunat(String numDoc) {
