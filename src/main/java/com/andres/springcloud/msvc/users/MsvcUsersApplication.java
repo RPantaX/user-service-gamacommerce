@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableFeignClients("*")
 @ComponentScan({
 		"com.andres.springcloud.msvc.users", // <--- AGREGA ESTA LÍNEA
-		"com.braidsbeautybyangie.sagapatternspringboot"
+		"pe.com.gamacommerce.corelibraryservicegamacommerce"
 })
 public class MsvcUsersApplication {
 
