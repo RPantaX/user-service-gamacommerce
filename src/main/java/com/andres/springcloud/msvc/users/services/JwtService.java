@@ -44,7 +44,9 @@ public class JwtService {
                 .collect(Collectors.toList());
         claims.put("roles", roles);
         claims.put("userId", user.getId());
-        claims.put("companyId", user.getCompany().getId());
+        if (user.getCompany() != null){
+            claims.put("companyId", user.getCompany().getId());
+        } else claims.put("companyId", null);
         return createToken(claims, userName);
     }
 

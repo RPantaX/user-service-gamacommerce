@@ -9,6 +9,7 @@ import com.andres.springcloud.msvc.users.services.IContractService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.Constants;
 
 @Service
@@ -17,6 +18,7 @@ import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.
 public class ContractService implements IContractService {
     private final ContractRepository contractRepository;
     @Override
+    @Transactional
     public ContractDto createContract(ContractRequest contractRequest) {
         Contract contractSaved = contractRepository.save(buildContract(contractRequest));
         return mapToContractDto(contractSaved);

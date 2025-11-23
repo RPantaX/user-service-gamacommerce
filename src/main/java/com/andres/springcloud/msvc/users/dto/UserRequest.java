@@ -23,5 +23,5 @@ public class UserRequest {
     @NotBlank
     private boolean admin;
     @NotBlank
-    private String companyRuc;
+    private Long companyId;
 }

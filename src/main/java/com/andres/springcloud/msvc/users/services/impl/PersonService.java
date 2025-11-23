@@ -6,12 +6,15 @@ import com.andres.springcloud.msvc.users.dto.request.PersonRequest;
 import com.andres.springcloud.msvc.users.entities.Address;
 import com.andres.springcloud.msvc.users.entities.DocumentType;
 import com.andres.springcloud.msvc.users.entities.Person;
+import com.andres.springcloud.msvc.users.repositories.AddressRepository;
+import com.andres.springcloud.msvc.users.repositories.DocumentTypeRepository;
 import com.andres.springcloud.msvc.users.repositories.PersonRepository;
 import com.andres.springcloud.msvc.users.services.IAddressService;
 import com.andres.springcloud.msvc.users.services.IPersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.Constants;
 
 @Service
@@ -20,7 +23,13 @@ import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.
 public class PersonService implements IPersonService {
     private final IAddressService addressService;
     private final PersonRepository personRepository;
+
+    //JUST FOR JPA CONEXT
+    private final AddressRepository addressRepository;
+    private final DocumentTypeRepository documentTypeRepository;
+
     @Override
+    @Transactional
     public PersonDto createPerson(PersonRequest personRequest) {
         log.info("Creating person with data: {}", personRequest);
         AddressDto addressDtoSaved =  addressService.createPersonAddress(personRequest);
@@ -44,11 +53,11 @@ public class PersonService implements IPersonService {
     }
     private Person buildPersonEntity(PersonRequest personRequest, Long addressSavedId) {
         return Person.builder()
-                .name(personRequest.getPersonName())
-                .lastName(personRequest.getPersonLastName())
-                .phoneNumber(personRequest.getPersonPhoneNumber())
-                .emailAddress(personRequest.getPersonEmailAddress())
-                .address(Address.builder().id(addressSavedId).build())
+                .name(personRequest.getPersonName().toUpperCase())
+                .lastName(personRequest.getPersonLastName().toUpperCase())
+                .phoneNumber(personRequest.getPersonPhoneNumber().toUpperCase())
+                .emailAddress(personRequest.getPersonEmailAddress().toUpperCase())
+                .address(addressRepository.getReferenceById(addressSavedId))
                 .documentNumber(personRequest.getPersonDocumentNumber())
                 .documentType(DocumentType.builder().id(personRequest.getPersonDocumentId()).build())
                 .state(Constants.STATUS_ACTIVE)

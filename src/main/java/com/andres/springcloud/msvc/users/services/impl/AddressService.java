@@ -1,9 +1,6 @@
 package com.andres.springcloud.msvc.users.services.impl;
 
 import com.andres.springcloud.msvc.users.dto.AddressDto;
-import com.andres.springcloud.msvc.users.dto.PersonDto;
-import com.andres.springcloud.msvc.users.dto.request.CompanyRequest;
-import com.andres.springcloud.msvc.users.dto.request.CreateCompanyRequest;
 import com.andres.springcloud.msvc.users.dto.request.PersonRequest;
 import com.andres.springcloud.msvc.users.dto.response.ResponseSunat;
 import com.andres.springcloud.msvc.users.entities.Address;
@@ -12,6 +9,7 @@ import com.andres.springcloud.msvc.users.services.IAddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.Constants;
 
 @Service
@@ -25,6 +23,7 @@ public class AddressService implements IAddressService {
     }
 
     @Override
+    @Transactional
     public AddressDto createPersonAddress(PersonRequest personRequest) {
         AddressDto addressDto = buildAddressFromPersonRequest(personRequest);
         Address address = addressRepository.save(mapToAddressEntity(addressDto));
@@ -32,6 +31,7 @@ public class AddressService implements IAddressService {
     }
 
     @Override
+    @Transactional
     public AddressDto createCompanyAddress(ResponseSunat responseSunat) {
         AddressDto addressDto = buildAddressFromSunat(responseSunat);
         Address address = addressRepository.save(mapToAddressEntity(addressDto));
@@ -54,20 +54,20 @@ public class AddressService implements IAddressService {
     }
     private AddressDto buildAddressFromSunat(ResponseSunat responseSunat) {
         return AddressDto.builder()
-                .city(responseSunat.getDistrito())
+                .city(responseSunat.getDistrito().toUpperCase())
                 .country("PERU") // Assuming the country is Peru
-                .state(responseSunat.getEstado())
-                .postalCode(responseSunat.getUbigeo()) // Sunat API may not provide postal code
-                .street(responseSunat.getDireccion())
+                .state(responseSunat.getEstado().toUpperCase())
+                .postalCode(responseSunat.getUbigeo().toUpperCase()) // Sunat API may not provide postal code
+                .street(responseSunat.getDireccion().toUpperCase())
                 .build();
     }
     private AddressDto buildAddressFromPersonRequest(PersonRequest personRequest) {
         return AddressDto.builder()
-                .city(personRequest.getPersonAddressCity())
-                .country(personRequest.getPersonAddressCountry())
-                .state(personRequest.getPersonAddressState())
-                .postalCode(personRequest.getPersonAddressPostalCode())
-                .street(personRequest.getPersonAddressStreet())
+                .city(personRequest.getPersonAddressCity().toUpperCase())
+                .country(personRequest.getPersonAddressCountry().toUpperCase())
+                .state(personRequest.getPersonAddressState().toUpperCase())
+                .postalCode(personRequest.getPersonAddressPostalCode().toUpperCase())
+                .street(personRequest.getPersonAddressStreet().toUpperCase())
                 .build();
     }
     private Address mapToAddressEntity(AddressDto addressDto) {

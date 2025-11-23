@@ -1,6 +1,5 @@
 package com.andres.springcloud.msvc.users.controllers;
 
-import com.andres.springcloud.msvc.users.dto.request.CompanyRequest;
 import com.andres.springcloud.msvc.users.dto.request.CreateCompanyRequest;
 import com.andres.springcloud.msvc.users.services.ICompanyService;
 import lombok.RequiredArgsConstructor;

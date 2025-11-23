@@ -8,7 +8,7 @@ import com.andres.springcloud.msvc.users.dto.response.CreateCompanyResponse;
 import com.andres.springcloud.msvc.users.dto.response.ResponseCompany;
 import com.andres.springcloud.msvc.users.dto.response.ResponseSunat;
 import com.andres.springcloud.msvc.users.entities.*;
-import com.andres.springcloud.msvc.users.repositories.CompanyRepository;
+import com.andres.springcloud.msvc.users.repositories.*;
 import com.andres.springcloud.msvc.users.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.Constants;
 import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.util.ValidateUtil;
 
@@ -32,21 +33,29 @@ import static com.andres.springcloud.msvc.users.services.impl.PersonService.mapT
 public class CompanyService implements ICompanyService {
 
     private final CompanyRepository companyRepository;
+    //Just for references to other services
+    private final PersonRepository personRepository;
+    private final CompanyTypeRepository companyTypeRepository;
+    private final DocumentTypeRepository documentTypeRepository;
+    private final ContractRepository contractRepository;
+    private final AddressRepository addressRepository;
     private final IPersonService iPersonService;
     private final IContractService iContractService;
     private final IRestSunatService iRestSunatService;
     private final IAddressService iAddressService;
     private final IUserService iUserService;
+
     @Override
+    @Transactional
     public CreateCompanyResponse createCompany(CreateCompanyRequest companyRequest) {
         log.info("Creating company with data: {}", companyRequest);
         validateCompanyData(companyRequest);
         PersonDto personDto = iPersonService.createPerson(companyRequest.getPerson());
         ContractDto contractDto = iContractService.createContract(companyRequest.getCompany().getContractRequest());
-        UserRequest user=  createUserForPersonCompany(personDto, companyRequest.getCompany().getCompanyRUC());
-        UserDto userDto = com.andres.springcloud.msvc.users.dto.constants.Constants.mapToUserDto(iUserService.save(user));
         Company companyToSave = buildCompanyToSave(companyRequest, personDto, contractDto);
         Company savedCompany = companyRepository.save(companyToSave);
+        UserRequest user =  createUserForPersonCompany(personDto, savedCompany.getId() );
+        UserDto userDto = com.andres.springcloud.msvc.users.dto.constants.Constants.mapToUserDto(iUserService.save(user));
         return CreateCompanyResponse.builder()
                 .companyDto(mapToCompanyDto(savedCompany))
                 .userDto(userDto)
@@ -77,13 +86,14 @@ public class CompanyService implements ICompanyService {
         log.info("Retrieving company with RUC: {}", ruc);
         Company company = companyRepository.findByCompanyRucWithAllrelations(ruc).orElse(null);
         ValidateUtil.requerido(company, UsersErrorEnum.COMPANY_NOT_FOUND_ERCO00011);
-        List<User> users = (List<User>) iUserService.findAll();
+        List<User> users =iUserService.findAllByCompanyId(company.getId());
         return ResponseCompany.builder()
+                .id(company.getId())
                 .companyRuc(company.getCompanyRuc())
-                .companyName(company.getCompanyName())
-                .companyTradeName(company.getCompanyTradeName())
+                .companyName(company.getCompanyName().toUpperCase())
+                .companyTradeName(company.getCompanyTradeName().toUpperCase())
                 .companyPhone(company.getCompanyPhone())
-                .companyEmail(company.getCompanyEmail())
+                .companyEmail(company.getCompanyEmail().toUpperCase())
                 .companyTypeName(company.getCompanyType().getValue())
                 .companyDocumentNumber(company.getDocumentType().getValue())
                 .companyAddressDto(mapToAddressDto(company.getCompanyAddress()))
@@ -113,6 +123,16 @@ public class CompanyService implements ICompanyService {
         return companyRepository.existsCompanyByCompanyRuc(ruc);
     }
 
+    @Override
+    public Company getCompanyReferenceById(Long companyId) {
+        return companyRepository.getReferenceById(companyId);
+    }
+
+    @Override
+    public Boolean existById(Long companyId) {
+        return companyRepository.existsById(companyId);
+    }
+
     private void validateCompanyData(CreateCompanyRequest companyRequest) {
         // Implement validation logic here
         log.info("Validating company data: {}", companyRequest);
@@ -128,15 +148,15 @@ public class CompanyService implements ICompanyService {
         AddressDto addressDto = iAddressService.createCompanyAddress(responseSunat);
         return Company.builder()
                 .companyRuc(companyRequest.getCompany().getCompanyRUC())
-                .companyName(responseSunat.getRazonSocial())
-                .companyAddress(Address.builder().id(addressDto.getId()).build())
+                .companyName(responseSunat.getRazon_social().toUpperCase())
+                .companyAddress(addressRepository.getReferenceById(addressDto.getId()))
                 .companyTradeName(companyRequest.getCompany().getCompanyTradeName())
                 .companyPhone(companyRequest.getCompany().getCompanyPhone())
                 .companyEmail(companyRequest.getCompany().getCompanyEmail())
                 .companyType(CompanyType.builder().id(companyRequest.getCompany().getCompanyTypeId()).build())
                 .documentType(DocumentType.builder().id(companyRequest.getCompany().getCompanyDocumentId()).build())
-                .person(Person.builder().id(personDto.getId()).build())
-                .contract(Contract.builder().id(contractDto.getId()).build())
+                .person(personRepository.getReferenceById(personDto.getId()))
+                .contract(contractRepository.getReferenceById(contractDto.getId()))
                 .image(companyRequest.getCompany().getImage())
                 .state(Constants.STATUS_ACTIVE)
                 .createdAt(Constants.getTimestamp())
@@ -155,16 +175,16 @@ public class CompanyService implements ICompanyService {
                 .build();
     }
 
-    private UserRequest createUserForPersonCompany(PersonDto personDto, String companyRuc) {
+    private UserRequest createUserForPersonCompany(PersonDto personDto, Long companyId) {
         log.info("Creating user for person with ID: {}", personDto.getId());
         String temporaryPassword = com.andres.springcloud.msvc.users.dto.constants.Constants.createDefaultPassword(personDto);
         return UserRequest.builder()
-                .username(personDto.getDocumentNumber())
-                .document(personDto.getDocumentNumber())
+                .username(personDto.getDocumentNumber().toUpperCase())
+                .document(personDto.getDocumentNumber().toUpperCase())
                 .documentId(personDto.getDocumentTypeId())
                 .password(temporaryPassword)
-                .email(personDto.getEmailAddress())
-                .companyRuc(companyRuc)
+                .email(personDto.getEmailAddress().toUpperCase())
+                .companyId(companyId)
                 .admin(true)
                 .build();
     }
