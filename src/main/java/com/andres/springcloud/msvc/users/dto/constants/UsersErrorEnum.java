@@ -1,7 +1,7 @@
 package com.andres.springcloud.msvc.users.dto.constants;
 
-import com.braidsbeautybyangie.sagapatternspringboot.aggregates.AppExceptions.TypeException;
-import com.braidsbeautybyangie.sagapatternspringboot.aggregates.aggregates.util.GenericError;
+import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.AppExceptions.TypeException;
+import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.util.GenericError;
 
 public enum UsersErrorEnum implements GenericError {
     //General Errors
@@ -17,10 +17,24 @@ public enum UsersErrorEnum implements GenericError {
     CUSTOMER_NOT_FOUND_ERC00008("ERC00008", "Customer Not Found", "The customer with the given ID does not exist.", TypeException.E),
     CUSTOMER_ALREADY_EXISTS_ERC00009("ERC00009", "Customer Already Exists", "The customer with the given email already exists in the system.", TypeException.E),
     CUSTOMER_INVALID_DATA_ERC00010("ERC00010", "Invalid Customer Data", "The provided customer data is invalid or incomplete.", TypeException.E),
+    //COMPANY ERRORS
+    COMPANY_NOT_FOUND_ERCO00011("ERCO00011", "Company Not Found", "The company with the given ID does not exist.", TypeException.E),
+    COMPANY_ALREADY_EXISTS_ERCO00012("ERCO00012", "Company Already Exists", "The company with the given RUC already exists in the system.", TypeException.E),
+    COMPANY_INVALID_DATA_ERCO00013("ERCO00013", "Invalid Company Data", "The provided company data is invalid or incomplete.", TypeException.E),
+    //CONTRACT ERRORS
+    CONTRACT_NOT_FOUND_ERCT00014("ERCT00014", "Contract Not Found", "The contract with the given ID does not exist.", TypeException.E),
+    CONTRACT_ALREADY_EXISTS_ERCT00015("ERCT00015", "Contract Already Exists", "The contract with the given number already exists in the system.", TypeException.E),
+    CONTRACT_INVALID_DATA_ERCT00016("ERCT00016", "Invalid Contract Data", "The provided contract data is invalid or incomplete.", TypeException.E),
+    //ADDRESS ERRORS
+    ADDRESS_NOT_FOUND_ERAD00017("ERAD00017", "Address Not Found", "The address with the given ID does not exist.", TypeException.E),
+    ADDRESS_ALREADY_EXISTS_ERAD00018("ERAD00018", "Address Already Exists", "The address with the given details already exists in the system.", TypeException.E),
+    ADDRESS_INVALID_DATA_ERAD00019("ERAD00019", "Invalid Address Data", "The provided address data is invalid or incomplete.", TypeException.E),
     //Document type
     DOCUMENT_TYPE_ALREADY_EXISTS_ERDT00001("ERDT00001", "Document Type Already Exists", "The document type with the given name already exists.", TypeException.E),
     DOCUMENT_TYPE_NOT_FOUND_ERDT00002("ERDT00002", "Document Type Not Found", "The document type with the given ID does not exist.", TypeException.E),
-
+    //Company type
+    COMPANY_TYPE_ALREADY_EXISTS_ERCT00003("ERCT00003", "Company Type Already Exists", "The company type with the given name already exists.", TypeException.E),
+    COMPANY_TYPE_NOT_FOUND_ERCT00004("ERCT00004", "Company Type Not Found", "The company type with the given ID does not exist.", TypeException.E),
     //EmployeeType
     EMPLOYEE_TYPE_ALREADY_EXISTS_ERET00001("ERET00001", "Employee Type Already Exists", "The employee type with the given name already exists.", TypeException.E),
     EMPLOYEE_TYPE_NOT_FOUND_ERET00002("ERET00002", "Employee Type Not Found", "The employee type with the given ID does not exist.", TypeException.E),
@@ -39,6 +53,7 @@ public enum UsersErrorEnum implements GenericError {
     //WARNING
     EMAIL_ALREADY_EXISTS_WAR00011("WAR00011", "Email Already Exists", "The email address is already associated with another user.", TypeException.W),
     PHONE_ALREADY_EXISTS_WAR00012("WAR00012", "Phone Already Exists", "The phone number is already associated with another user.", TypeException.W),
+    DOCUMENT_NUMBER_ALREADY_EXISTS_WAR00013("WAR00013", "Document Number Already Exists", "The document number is already associated with another user.", TypeException.W)
     ;
     private UsersErrorEnum(String code, String title, String message, TypeException type) {
         this.code = code;

@@ -1,7 +1,7 @@
 package com.andres.springcloud.msvc.users.controllers;
 
 import com.andres.springcloud.msvc.users.dto.UserRequest;
-import com.braidsbeautybyangie.sagapatternspringboot.aggregates.aggregates.util.ApiResponse;
+import pe.com.gamacommerce.corelibraryservicegamacommerce.aggregates.aggregates.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -23,18 +23,18 @@ public class Person {
     private Long id;
 
     @NotBlank
-    @Column(name = "name")
+    @Column(name = "person_name")
     private String name;
 
     @NotBlank
-    @Column(name = "last_name")
+    @Column(name = "person_last_name")
     private String lastName;
 
-    @Column(name = "phone_number")
+    @Column(name = "person_phone_number")
     private String phoneNumber;
 
     @Email
-    @Column(name = "email_address", unique = true)
+    @Column(name = "person_email_address", unique = true)
     private String emailAddress;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -47,7 +47,7 @@ public class Person {
     @JoinColumn(name = "document_id")
     private DocumentType documentType;
 
-    @Column(name = "document_number", unique = true)
+    @Column(name = "person_document_number", unique = true)
     private String documentNumber;
 
     @Column(name = "state", nullable = false)

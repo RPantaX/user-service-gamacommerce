@@ -58,13 +58,13 @@ public class AuthController {
             String username = jwtService.extractUsername(token);
             List<String> roles = jwtService.extractRoles(token);
             Long userId = jwtService.extractUserId(token);
-
+            Long companyId = jwtService.extractCompanyId(token);
             TokenValidationResponse response = new TokenValidationResponse();
             response.setValid(true);
             response.setUsername(username);
             response.setRoles(roles);
             response.setUserId(userId);
-
+            response.setCompanyId(companyId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             TokenValidationResponse response = new TokenValidationResponse();

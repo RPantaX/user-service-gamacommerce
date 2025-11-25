@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "address")
 @Getter
@@ -33,10 +35,20 @@ public class Address {
     @NotBlank
     @Column(name = "address_postal_code")
     private String postalCode;
-    @NotBlank
-    @Column(name = "address_description")
-    private String description;
+
     @NotBlank
     @Column(name = "address_country")
     private String country;
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
+
+    @Column(name = "modified_at")
+    private Timestamp modifiedAt;
+
+    @Column(name = "created_at", nullable = false)
+    private Timestamp createdAt;
+
+    @Column(name = "modified_by_user", nullable = false, length = 15)
+    private String modifiedByUser;
+
 }

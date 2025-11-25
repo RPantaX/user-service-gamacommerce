@@ -44,7 +44,9 @@ public class JwtService {
                 .collect(Collectors.toList());
         claims.put("roles", roles);
         claims.put("userId", user.getId());
-
+        if (user.getCompany() != null){
+            claims.put("companyId", user.getCompany().getId());
+        } else claims.put("companyId", null);
         return createToken(claims, userName);
     }
 
@@ -88,6 +90,13 @@ public class JwtService {
     public Long extractUserId(String token) {
         Claims claims = extractAllClaims(token);
         return Long.valueOf(claims.get("userId").toString());
+    }
+    public Long extractCompanyId(String token) {
+        Claims claims = extractAllClaims(token);
+        if (claims.get("companyId") == null) {
+            return null;
+        }
+        return Long.valueOf(claims.get("companyId").toString());
     }
 
     private Boolean isTokenExpired(String token) {

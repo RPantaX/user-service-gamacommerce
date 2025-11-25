@@ -24,6 +24,4 @@ public class AddressDto {
 
     @NotBlank
     private String country;
-    @NotBlank
-    private String description;
 }

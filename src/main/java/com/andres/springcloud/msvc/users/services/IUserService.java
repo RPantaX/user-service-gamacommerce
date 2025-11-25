@@ -14,6 +14,7 @@ public interface IUserService {
     Optional<User> findByUsername(String username);
 
     Iterable<User> findAll();
+    List<User> findAllByCompanyId(Long companyId);
 
     User save(UserRequest user);
     Optional<User> update(User user, Long id);

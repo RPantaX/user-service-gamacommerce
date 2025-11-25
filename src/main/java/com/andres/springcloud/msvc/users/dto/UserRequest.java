@@ -22,4 +22,6 @@ public class UserRequest {
     private String email;
     @NotBlank
     private boolean admin;
+    @NotBlank
+    private Long companyId;
 }

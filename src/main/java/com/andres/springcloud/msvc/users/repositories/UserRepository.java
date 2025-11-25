@@ -1,5 +1,6 @@
 package com.andres.springcloud.msvc.users.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
@@ -10,4 +11,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Boolean existsByKeycloakId(String keycloakId);
+    List<User> findAllByCompanyId(Long companyId);
 }

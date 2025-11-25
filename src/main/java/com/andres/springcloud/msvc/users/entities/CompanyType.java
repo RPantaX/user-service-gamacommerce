@@ -1,24 +1,21 @@
 package com.andres.springcloud.msvc.users.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
-@Table(name = "customer_type")
+@Table(name = "company_type")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerType {
-
+public class CompanyType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_type_id")
+    @Column(name = "company_type_id")
     private Long id;
 
-    @NotBlank
-    @Column(name = "customer_type_value", unique = true)
+    @Column(name = "company_type_value", nullable = false, unique = true)
     private String value;
 }
