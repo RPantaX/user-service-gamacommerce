@@ -93,6 +93,9 @@ public class JwtService {
     }
     public Long extractCompanyId(String token) {
         Claims claims = extractAllClaims(token);
+        if (claims.get("companyId") == null) {
+            return null;
+        }
         return Long.valueOf(claims.get("companyId").toString());
     }
 
